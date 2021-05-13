@@ -1,0 +1,18 @@
+{
+    "name": "pikoroco/posta",
+    "description": "Hungarian Mail Delivary (Posta) xls convert to json file (AWS Structure)",
+    "type": "library",
+    "time": "2021-05-13",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "pikoroco",
+            "email": "info@pikoroco.hu",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "phpoffice/phpspreadsheet": "^1.17"
+    }
+}
