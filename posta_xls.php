@@ -24,15 +24,35 @@ $sheetDatas = $spreadsheet->getActiveSheet()->toArray();
  * Unset first empty row and header
  */
 unset($sheetDatas[0], $sheetDatas[1]);
-// AWS DynamoDB table name:
+/**
+ * UUID v4 faker:
+ * @return string
+ * @throws Exception
+ */
+function uuid(): string
+{
+    $data = random_bytes(16);
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+/*
+ * AWS DynamoDB table name
+ */
 $tablename = 'Postcode-b2pjglf355ff7n3jca5dvjy4gm-test';
-// Staring string of file
+/*
+ * Staring string of file
+ */
 $head = '{'.PHP_EOL;
 $head .= '  "'.$tablename.'": ['.PHP_EOL;
-// Ending string of file
+/*
+ * Ending string of file
+ */
 $foot = '   ]'.PHP_EOL;
 $foot .= '}';
-// Content string of file
+/*
+ * Content string of file
+ */
 $body = '';
 $numberOfImportedDataRow = count($sheetDatas);
 $numberOfIteration = ceil(($numberOfImportedDataRow / 25));
@@ -64,15 +84,22 @@ foreach($feldolgozotomb as $chunk ) {
             break;
         }
         $c++;
-        // First iteration hasn't coma
+        /*
+         * First iteration hasn't coma
+         */
         if($c > 1){
             $body .= PHP_EOL . '  ,';
         }
-        // Special AWS json format
+        /*
+         * Special AWS json format
+         */
         $body .= '{'.PHP_EOL;
         $body .= '    "PutRequest": {'.PHP_EOL;
         $body .= '      "Item": {'.PHP_EOL;
         $body .= '        "id": {'.PHP_EOL;
+        $body .= '          "S": "'. uuid() .'"'.PHP_EOL;
+        $body .= '        },'.PHP_EOL;
+        $body .= '        "postcode": {'.PHP_EOL;
         $body .= '          "S": "'.$elements[0].'"'.PHP_EOL;
         $body .= '        },'.PHP_EOL;
         $body .= '        "settlement": {'.PHP_EOL;
